@@ -1,0 +1,14 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>8042 金山電 帽子戲法</title>
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+<style>body{margin:0;background:#0b0b10;color:#eee;font-family:"微軟正黑體",sans-serif}
+.hd{padding:12px 16px;border-bottom:2px solid #bf9000} .hd h2{margin:0;font-size:20px;color:#f4d03f}
+.hd .s{color:#bbb;font-size:13px;margin-top:4px} .s b{color:#f4d03f} #c{width:100%;height:80vh}
+a.bk{color:#f4d03f;text-decoration:none;font-size:13px}</style></head><body>
+<div class="hd"><a class="bk" href="index.html">← 回戰鬥牆</a>
+<h2>🎩 8042 金山電 帽子戲法 5分K</h2>
+<div class="s">2026-06-18　收 <b>194.50</b>　｜　門檻 <b>195.00</b>（關鍵K高點）　｜　站穩：<b>10:20</b>　｜　紅漲綠跌</div></div>
+<div id="c"></div><script>
+const ch=LightweightCharts.createChart(document.getElementById('c'),{layout:{background:{color:'#0b0b10'},textColor:'#ccc'},grid:{vertLines:{color:'#1c1c26'},horzLines:{color:'#1c1c26'}},timeScale:{timeVisible:true,secondsVisible:false},rightPriceScale:{borderColor:'#333'}});
+const s=ch.addCandlestickSeries({upColor:'#e74c3c',downColor:'#26a69a',borderUpColor:'#e74c3c',borderDownColor:'#26a69a',wickUpColor:'#e74c3c',wickDownColor:'#26a69a'});
+s.setData([{"time": 1781773200, "open": 195.0, "high": 195.0, "low": 195.0, "close": 195.0}, {"time": 1781774400, "open": 189.5, "high": 189.5, "low": 189.5, "close": 189.5}, {"time": 1781775600, "open": 193.0, "high": 193.0, "low": 193.0, "close": 193.0}, {"time": 1781776800, "open": 194.0, "high": 194.0, "low": 194.0, "close": 194.0}, {"time": 1781778000, "open": 198.0, "high": 198.0, "low": 198.0, "close": 198.0}, {"time": 1781779200, "open": 197.5, "high": 197.5, "low": 197.5, "close": 197.5}, {"time": 1781780400, "open": 197.0, "high": 197.0, "low": 197.0, "close": 197.0}, {"time": 1781781600, "open": 196.5, "high": 196.5, "low": 196.5, "close": 196.5}, {"time": 1781782800, "open": 196.5, "high": 196.5, "low": 196.5, "close": 196.5}, {"time": 1781784000, "open": 196.0, "high": 196.0, "low": 196.0, "close": 196.0}, {"time": 1781785200, "open": 195.0, "high": 195.0, "low": 195.0, "close": 195.0}, {"time": 1781786400, "open": 195.0, "high": 195.0, "low": 195.0, "close": 195.0}, {"time": 1781787600, "open": 195.0, "high": 195.0, "low": 195.0, "close": 195.0}, {"time": 1781788800, "open": 194.5, "high": 194.5, "low": 194.5, "close": 194.5}]);s.createPriceLine({price:195.00,color:'#f4d03f',lineWidth:2,lineStyle:2,axisLabelVisible:true,title:'門檻 195.00'});
+s.setMarkers([{"time": 1781773200, "position": "belowBar", "color": "#29b6f6", "shape": "arrowUp", "text": "關鍵K"}, {"time": 1781778000, "position": "aboveBar", "color": "#e74c3c", "shape": "circle", "text": "站穩 10:20"}]);ch.timeScale().fitContent();</script></body></html>
