@@ -19,11 +19,12 @@ a.bk:hover{background:#1c3a5e}
 .evt .dn{background:#0d2a1e;border:1px solid #2e7d4f;color:#8ff0c0;border-radius:5px;padding:1px 7px}
 .wrap{padding:6px 8px;overflow-x:auto} svg{display:block;margin:0 auto;max-width:100%;height:auto}
 .qcap{fill:#8aa6e0} .dotlab{font-size:9px;fill:#dbe6ff;pointer-events:none}
-#dots circle{transition:cx .55s ease,cy .55s ease,r .18s ease,fill .3s ease}
+#dots rect{transition:x .5s ease,y .5s ease,fill .3s ease}
 #secs circle{transition:cx .55s ease,cy .55s ease,r .18s ease,fill .3s ease}
 #dots g{cursor:pointer}
-#dots circle.pulse{transform-box:fill-box;transform-origin:center;animation:breathe 1.15s ease-in-out infinite}
-@keyframes breathe{0%,100%{transform:scale(1);stroke-opacity:.6}50%{transform:scale(1.45);stroke-opacity:1}}
+#dots rect.pulse{transform-box:fill-box;transform-origin:center;animation:breathe 1.1s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1);stroke-opacity:.55}50%{transform:scale(1.16);stroke-opacity:1}}
+.pilltxt{font-size:11px;fill:#fff;font-weight:bold;pointer-events:none;paint-order:stroke;stroke:rgba(0,0,0,.55);stroke-width:2.5px}
 .fbar{padding:7px 14px;background:#13203a;border-bottom:1px solid #2a5a8a;font-size:14px;color:#cfe3ff}
 .fbar b{color:#ffd54f} .fbar a{color:#4fc3f7;font-weight:bold;margin:0 6px} .fbar .fclr{color:#ff8a80;cursor:pointer;font-weight:bold}</style></head><body>
 <div class="hd"><a class="bk" href="index.html">← 回戰情室</a><h2>🎯 全市場強弱四象限・時間軸回測</h2>
@@ -33,7 +34,7 @@ a.bk:hover{background:#1c3a5e}
 <span id="tlab">--:--</span>
 <input type="range" id="tr" min="0" max="0" value="0" step="1">
 <button class="btn" id="view">🏷 族群模式</button>
-<button class="btn" id="mode">🔀 個股名</button>
+<button class="btn" id="mode">🫧 泡泡名</button>
 </div>
 <div class="filt"><span class="lbl">顯示族群：</span><button class="mini" id="fall">全選</button><button class="mini" id="fnone">全不選</button><button class="mini" id="fstrong">只看強方</button><button class="mini" id="fweak">只看弱方</button><span id="chips"></span></div>
 <div class="evt"><span class="lbl">本時點：</span><span id="evtup"></span><span id="evtdn"></span></div>
@@ -59,15 +60,14 @@ if(!enabled||enabled.size===0)enabled=new Set(D.secs);
 function saveEn(){localStorage.setItem('dojo_quad_secs',JSON.stringify([...enabled]));}
 const nodes=D.stocks.map(st=>{
  const grp=document.createElementNS(svgns,'g');
- const c=document.createElementNS(svgns,'circle');
- c.setAttribute('r','5');c.setAttribute('filter','url(#glow)');c.setAttribute('stroke-width','1');
- const tt=document.createElementNS(svgns,'title');c.appendChild(tt);
- const lab=document.createElementNS(svgns,'text');lab.setAttribute('class','dotlab');lab.style.display='none';lab.textContent=st.n;
- if(st.lk){const a=document.createElementNS(svgns,'a');a.setAttribute('href','突破_'+st.c+'.html');a.setAttribute('target','_blank');a.appendChild(c);grp.appendChild(a);}else{grp.appendChild(c);}
- grp.appendChild(lab);gDots.appendChild(grp);
- const o={st,grp,c,tt,lab,baseR:5,baseCol:'#888'};
- grp.addEventListener('mouseenter',()=>{c.setAttribute('r',(o.baseR*1.9).toFixed(1));c.setAttribute('stroke','#ffffff');c.setAttribute('stroke-width','2');lab.style.display='';});
- grp.addEventListener('mouseleave',()=>{c.setAttribute('r',o.baseR.toFixed(1));c.setAttribute('stroke',o.baseStroke||o.baseCol);c.setAttribute('stroke-width',o.baseSW||'1');lab.style.display=o.labOn?'':'none';});
+ const rect=document.createElementNS(svgns,'rect');
+ rect.setAttribute('filter','url(#glow)');rect.setAttribute('stroke-width','1');
+ const tt=document.createElementNS(svgns,'title');rect.appendChild(tt);
+ const txt=document.createElementNS(svgns,'text');txt.setAttribute('class','pilltxt');txt.setAttribute('text-anchor','middle');txt.textContent=st.n;
+ grp.appendChild(rect);grp.appendChild(txt);gDots.appendChild(grp);
+ const o={st,grp,rect,txt,tt,baseCol:'#888',baseSW:'1'};
+ grp.addEventListener('mouseenter',()=>{rect.setAttribute('stroke','#ffffff');rect.setAttribute('stroke-width','2.5');gDots.appendChild(grp);});
+ grp.addEventListener('mouseleave',()=>{rect.setAttribute('stroke',o.baseStroke||o.baseCol);rect.setAttribute('stroke-width',o.baseSW);});
  grp.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();focusOn(o);});
  return o;
 });
@@ -100,20 +100,27 @@ function update(i){
  const prev=i>0?i-1:0;const up=[],dn=[];
  nodes.forEach(o=>{
   const v=o.st.v[i],y=secAvg(o.st.s,i);
-  if(view!=='stock'||!enabled.has(o.st.s)||v==null||y==null){o.grp.style.display='none';o.c.classList.remove('pulse');return;}
+  if(view!=='stock'||!enabled.has(o.st.s)||v==null||y==null){o.grp.style.display='none';o.rect.classList.remove('pulse');return;}
   o.grp.style.display='';
   const dim=focusSec&&o.st.s!==focusSec, foc=focusCode===o.st.c;
   const cx=X(v),cy=Y(y),col=v>=0?'#ff5252':'#26a69a';
-  let r=4+Math.min(6,Math.abs(v)/2); if(foc)r*=1.6;
-  o.c.classList.toggle('pulse', v>=7&&!dim);
+  o.rect.classList.toggle('pulse', v>=7&&!dim);
   const stroke=foc?'#ffffff':col, sw=foc?'2.5':'1';
-  o.baseR=r;o.baseCol=col;o.baseStroke=stroke;o.baseSW=sw;
-  o.c.setAttribute('cx',cx.toFixed(1));o.c.setAttribute('cy',cy.toFixed(1));
-  o.c.setAttribute('r',r.toFixed(1));o.c.setAttribute('fill',col);
-  o.c.setAttribute('fill-opacity',dim?'0.1':'0.85');o.c.setAttribute('stroke',stroke);o.c.setAttribute('stroke-width',sw);
+  o.baseCol=col;o.baseStroke=stroke;o.baseSW=sw;
+  if(showName){
+    const w=o.st.n.length*13+16, h=foc?23:19;
+    o.rect.setAttribute('x',(cx-w/2).toFixed(1));o.rect.setAttribute('y',(cy-h/2).toFixed(1));
+    o.rect.setAttribute('width',w);o.rect.setAttribute('height',h);o.rect.setAttribute('rx',(h/2).toFixed(1));
+    o.txt.setAttribute('x',cx.toFixed(1));o.txt.setAttribute('y',(cy+4).toFixed(1));o.txt.style.display=dim?'none':'';
+    o.txt.style.fontSize=foc?'13px':'11px';
+  }else{
+    const s=(4+Math.min(6,Math.abs(v)/2))*(foc?3.2:2);
+    o.rect.setAttribute('x',(cx-s/2).toFixed(1));o.rect.setAttribute('y',(cy-s/2).toFixed(1));
+    o.rect.setAttribute('width',s);o.rect.setAttribute('height',s);o.rect.setAttribute('rx',(s/2).toFixed(1));
+    o.txt.style.display='none';
+  }
+  o.rect.setAttribute('fill',col);o.rect.setAttribute('fill-opacity',dim?'0.12':(showName?'0.92':'0.85'));o.rect.setAttribute('stroke',stroke);o.rect.setAttribute('stroke-width',sw);
   o.tt.textContent=o.st.n+' '+o.st.c+'｜個股'+(v>=0?'+':'')+v+'%｜'+o.st.s+'族'+((y>=0?'+':'')+y)+'%';
-  const labOn=!dim&&(showName||foc||(focusSec&&o.st.s===focusSec));o.labOn=labOn;
-  o.lab.setAttribute('x',(cx+6).toFixed(1));o.lab.setAttribute('y',(cy+3).toFixed(1));o.lab.style.display=labOn?'':'none';
   const pv=o.st.v[prev];
   if(pv!=null&&i>0){if(pv<0&&v>=0)up.push(o.st.n);else if(pv>=0&&v<0)dn.push(o.st.n);}
  });
@@ -130,7 +137,7 @@ function update(i){
  document.getElementById('evtdn').innerHTML=dn.length?('<span class="dn">▼翻綠轉折 '+dn.slice(0,12).join('、')+(dn.length>12?'…':'')+'</span>'):'';
 }
 tr.addEventListener('input',e=>update(+e.target.value));
-document.getElementById('mode').addEventListener('click',e=>{showName=!showName;e.target.classList.toggle('on',showName);e.target.textContent=showName?'🔵 只看亮點':'🔀 個股名';update(ti);});
+document.getElementById('mode').addEventListener('click',e=>{showName=!showName;e.target.classList.toggle('on',showName);e.target.textContent=showName?'🔵 只看亮點':'🫧 泡泡名';update(ti);});
 document.getElementById('view').addEventListener('click',e=>{view=(view==='stock')?'sector':'stock';e.target.classList.toggle('on',view==='sector');e.target.textContent=(view==='sector')?'👤 個股模式':'🏷 族群模式';update(ti);});
 document.getElementById('play').addEventListener('click',e=>{
  if(timer){clearInterval(timer);timer=null;e.target.textContent='▶ 播放';e.target.classList.remove('on');return;}
