@@ -3,7 +3,7 @@
 <style>body{margin:0;background:#0a0e1a;color:#e6eefc;font-family:"微軟正黑體",sans-serif}
 .hd{padding:12px 16px;border-bottom:2px solid #00bcd4;background:linear-gradient(90deg,#0a1a3a,#0a0e1a)}
 .hd h2{margin:0;font-size:20px;color:#4fc3f7} .hd .s{color:#9fb3d1;font-size:13px;margin-top:4px}
-.s b{color:#4fc3f7} #c{width:100%;height:78vh} a.bk{display:inline-block;color:#cfe3ff;background:#13203a;border:1px solid #2a5a8a;border-radius:8px;text-decoration:none;font-size:15px;font-weight:bold;padding:7px 14px} a.bk:hover{background:#1c3a5e}
+.s b{color:#4fc3f7} #c{width:100%;height:72vh} .ohlc{padding:6px 14px;background:#0e1426;border-bottom:1px solid #1c2c4a;font-size:14px;color:#cfe3ff} .ohlc b{color:#ffd54f} a.bk{display:inline-block;color:#cfe3ff;background:#13203a;border:1px solid #2a5a8a;border-radius:8px;text-decoration:none;font-size:15px;font-weight:bold;padding:7px 14px} a.bk:hover{background:#1c3a5e}
 .nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 14px;background:#0e1426;border-bottom:1px solid #1c2c4a}
 .nav a{flex:1;min-width:90px;text-align:center;color:#cfe3ff;background:#13203a;border:1px solid #2a5a8a;border-radius:8px;text-decoration:none;font-size:15px;font-weight:bold;padding:9px 6px}
 .nav a:hover{background:#1c3a5e} .nav a.dis{opacity:.35;pointer-events:none}
@@ -13,6 +13,7 @@
 <div class="s">2026-07-09　收 <b>19.10</b>　｜　突破門檻 <b>19.35</b>（起漲K高點）　｜　站上確認：<b>未確認</b></div>
 <div class="s">🎯 3K低 <b style="color:#ffd54f">19.35</b>　現價→<b style="color:#26a69a">3K空</b>　｜　5MA <b>19.00</b> / 20MA <b>—</b> →<b style="color:#9fb3d1">月線—</b>　｜　綜合 <span class="cmb" style="color:#ffb300">3K空＋月線—</span>　<span style="color:#6f7da0">紫=5MA 深紫=20MA 金=3K低 青=突破門檻</span></div></div>
 <div class="nav"><a href="突破_3709.html">◀ 鑫聯大投控</a><a class="bk" href="index.html">⌂ 戰情室</a><a href="突破_3287.html">廣寰科 ▶</a></div>
+<div class="ohlc" id="ohlc">移動游標看每根K棒的 開/收/低/高</div>
 <div id="c"></div><script>
 const ch=LightweightCharts.createChart(document.getElementById('c'),{layout:{background:{color:'#0a0e1a'},textColor:'#9fb3d1'},grid:{vertLines:{color:'#13203a'},horzLines:{color:'#13203a'}},timeScale:{timeVisible:true,secondsVisible:false},rightPriceScale:{borderColor:'#1c2c4a'}});
 const s=ch.addCandlestickSeries({upColor:'#ff5252',downColor:'#26a69a',borderUpColor:'#ff5252',borderDownColor:'#26a69a',wickUpColor:'#ff5252',wickDownColor:'#26a69a'});
@@ -21,4 +22,4 @@ const ma5=ch.addLineSeries({color:'#e040fb',lineWidth:2,priceLineVisible:false,l
 const ma20=ch.addLineSeries({color:'#7e57c2',lineWidth:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});ma20.setData([]);
 s.createPriceLine({price:19.35,color:'#ffd54f',lineWidth:2,lineStyle:0,axisLabelVisible:true,title:'3K低 19.35'});
 s.createPriceLine({price:19.35,color:'#4fc3f7',lineWidth:1,lineStyle:2,axisLabelVisible:true,title:'門檻 19.35'});
-s.setMarkers([{"time": 1783588800, "position": "belowBar", "color": "#00e5ff", "shape": "arrowUp", "text": "起漲K"}]);ch.timeScale().fitContent();</script><script>let _sx=0;addEventListener("touchstart",e=>_sx=e.changedTouches[0].clientX,{passive:true});addEventListener("touchend",e=>{var dx=e.changedTouches[0].clientX-_sx,nx="突破_3287.html",pv="突破_3709.html";if(Math.abs(dx)>70){if(dx<0&&nx)location=nx;else if(dx>0&&pv)location=pv;}},{passive:true});</script></body></html>
+s.setMarkers([{"time": 1783588800, "position": "belowBar", "color": "#00e5ff", "shape": "arrowUp", "text": "起漲K"}]);ch.subscribeCrosshairMove(function(p){var el=document.getElementById('ohlc');if(!el)return;if(!p.time||!p.seriesData||!p.seriesData.get(s)){el.innerHTML='移動游標看每根K棒的 開/收/低/高';return;}var d=p.seriesData.get(s),dt=new Date(p.time*1000),z=function(n){return('0'+n).slice(-2);};var ts=z(dt.getUTCMonth()+1)+'/'+z(dt.getUTCDate())+' '+z(dt.getUTCHours())+':'+z(dt.getUTCMinutes());var up=d.close>=d.open?'#ff5252':'#26a69a';el.innerHTML='<b>'+ts+'</b>　開 <span style="color:'+up+'">'+d.open.toFixed(2)+'</span>　收 <span style="color:'+up+'">'+d.close.toFixed(2)+'</span>　低 <span style="color:#26a69a">'+d.low.toFixed(2)+'</span>　高 <span style="color:#ff5252">'+d.high.toFixed(2)+'</span>';});ch.timeScale().fitContent();</script><script>let _sx=0;addEventListener("touchstart",e=>_sx=e.changedTouches[0].clientX,{passive:true});addEventListener("touchend",e=>{var dx=e.changedTouches[0].clientX-_sx,nx="突破_3287.html",pv="突破_3709.html";if(Math.abs(dx)>70){if(dx<0&&nx)location=nx;else if(dx>0&&pv)location=pv;}},{passive:true});</script></body></html>

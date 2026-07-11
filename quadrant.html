@@ -92,7 +92,7 @@ document.getElementById('fstrong').onclick=()=>{const i=ti;enabled=new Set(D.sec
 document.getElementById('fweak').onclick=()=>{const i=ti;enabled=new Set(D.secs.filter(s=>{const a=D.secavg[s];return a&&a[i]!=null&&a[i]<0;}));saveEn();renderChips();update(ti);};
 function secAvg(sec,i){const a=D.secavg[sec];return a?a[i]:null;}
 let showName=true,view='stock',ti=0,timer=null,focusSec=null,focusCode=null;
-function focusOn(o){if(focusCode===o.st.c){focusSec=null;focusCode=null;}else{focusSec=o.st.s;focusCode=o.st.c;}renderFocusBar();update(ti);}
+function focusOn(o){if(focusCode===o.st.c){focusSec=null;focusCode=null;}else{focusSec=o.st.s;focusCode=o.st.c;nodes.forEach(n=>{if(n.st.s===focusSec)gDots.appendChild(n.grp);});}renderFocusBar();update(ti);}
 function renderFocusBar(){const fb=document.getElementById('focusbar');if(!focusCode){fb.style.display='none';return;}const o=nodes.find(n=>n.st.c===focusCode);fb.style.display='';const lk=o.st.lk?'<a href="突破_'+o.st.c+'.html" target="_blank">看5分K</a>':'';fb.innerHTML='🔒 鎖定 <b>'+o.st.n+' '+o.st.c+'</b>（'+o.st.s+'族・只亮同族）　'+lk+'<span class="fclr" id="fclr">✕ 取消</span>';document.getElementById('fclr').onclick=()=>{focusSec=null;focusCode=null;renderFocusBar();update(ti);};}
 const tr=document.getElementById('tr');tr.max=D.times.length-1;
 function update(i){
@@ -105,21 +105,25 @@ function update(i){
   const dim=focusSec&&o.st.s!==focusSec, foc=focusCode===o.st.c;
   const cx=X(v),cy=Y(y),col=v>=0?'#ff5252':'#26a69a';
   o.rect.classList.toggle('pulse', v>=7&&!dim);
-  const stroke=foc?'#ffffff':col, sw=foc?'2.5':'1';
-  o.baseCol=col;o.baseStroke=stroke;o.baseSW=sw;
+  const stroke=foc?'#ffffff':col;
+  o.baseCol=col;o.baseStroke=stroke;
   if(showName){
     const w=o.st.n.length*13+16, h=foc?23:19;
     o.rect.setAttribute('x',(cx-w/2).toFixed(1));o.rect.setAttribute('y',(cy-h/2).toFixed(1));
     o.rect.setAttribute('width',w);o.rect.setAttribute('height',h);o.rect.setAttribute('rx',(h/2).toFixed(1));
-    o.txt.setAttribute('x',cx.toFixed(1));o.txt.setAttribute('y',(cy+4).toFixed(1));o.txt.style.display=dim?'none':'';
+    o.rect.setAttribute('fill','#0b1120');
+    o.txt.setAttribute('x',cx.toFixed(1));o.txt.setAttribute('y',(cy+4).toFixed(1));o.txt.setAttribute('fill',col);o.txt.style.display=dim?'none':'';
     o.txt.style.fontSize=foc?'13px':'11px';
+    o.baseSW=foc?'2.5':'1.5';
   }else{
-    const s=(4+Math.min(6,Math.abs(v)/2))*(foc?3.2:2);
-    o.rect.setAttribute('x',(cx-s/2).toFixed(1));o.rect.setAttribute('y',(cy-s/2).toFixed(1));
-    o.rect.setAttribute('width',s);o.rect.setAttribute('height',s);o.rect.setAttribute('rx',(s/2).toFixed(1));
+    const sz=(4+Math.min(6,Math.abs(v)/2))*(foc?3.2:2);
+    o.rect.setAttribute('x',(cx-sz/2).toFixed(1));o.rect.setAttribute('y',(cy-sz/2).toFixed(1));
+    o.rect.setAttribute('width',sz);o.rect.setAttribute('height',sz);o.rect.setAttribute('rx',(sz/2).toFixed(1));
+    o.rect.setAttribute('fill',col);
     o.txt.style.display='none';
+    o.baseSW=foc?'2.5':'1';
   }
-  o.rect.setAttribute('fill',col);o.rect.setAttribute('fill-opacity',dim?'0.12':(showName?'0.92':'0.85'));o.rect.setAttribute('stroke',stroke);o.rect.setAttribute('stroke-width',sw);
+  o.rect.setAttribute('fill-opacity',dim?'0.12':(showName?'0.85':'0.85'));o.rect.setAttribute('stroke',stroke);o.rect.setAttribute('stroke-width',o.baseSW);
   o.tt.textContent=o.st.n+' '+o.st.c+'｜個股'+(v>=0?'+':'')+v+'%｜'+o.st.s+'族'+((y>=0?'+':'')+y)+'%';
   const pv=o.st.v[prev];
   if(pv!=null&&i>0){if(pv<0&&v>=0)up.push(o.st.n);else if(pv>=0&&v<0)dn.push(o.st.n);}
