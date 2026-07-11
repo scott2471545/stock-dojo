@@ -28,7 +28,7 @@ a.bk:hover{background:#1c3a5e}
 <button class="btn" id="view">🏷 族群模式</button>
 <button class="btn" id="mode">🔀 個股名</button>
 </div>
-<div class="filt"><span class="lbl">顯示族群：</span><button class="mini" id="fall">全選</button><button class="mini" id="fnone">全不選</button><button class="mini" id="fstrong">只看強方</button><span id="chips"></span></div>
+<div class="filt"><span class="lbl">顯示族群：</span><button class="mini" id="fall">全選</button><button class="mini" id="fnone">全不選</button><button class="mini" id="fstrong">只看強方</button><button class="mini" id="fweak">只看弱方</button><span id="chips"></span></div>
 <div class="evt"><span class="lbl">本時點：</span><span id="evtup"></span><span id="evtdn"></span></div>
 <div class="wrap"><svg id="sv" viewBox="0 0 940 660" width="940" height="660">
 <defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
@@ -77,6 +77,7 @@ function renderChips(){D.secs.forEach(sec=>{const on=enabled.has(sec),b=chips[se
 document.getElementById('fall').onclick=()=>{enabled=new Set(D.secs);saveEn();renderChips();update(ti);};
 document.getElementById('fnone').onclick=()=>{enabled=new Set();saveEn();renderChips();update(ti);};
 document.getElementById('fstrong').onclick=()=>{const i=ti;enabled=new Set(D.secs.filter(s=>{const a=D.secavg[s];return a&&a[i]!=null&&a[i]>=0;}));saveEn();renderChips();update(ti);};
+document.getElementById('fweak').onclick=()=>{const i=ti;enabled=new Set(D.secs.filter(s=>{const a=D.secavg[s];return a&&a[i]!=null&&a[i]<0;}));saveEn();renderChips();update(ti);};
 function secAvg(sec,i){const a=D.secavg[sec];return a?a[i]:null;}
 let showName=false,view='stock',ti=0,timer=null;
 const tr=document.getElementById('tr');tr.max=D.times.length-1;
