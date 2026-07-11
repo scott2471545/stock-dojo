@@ -21,7 +21,11 @@ a.bk:hover{background:#1c3a5e}
 .qcap{fill:#8aa6e0} .dotlab{font-size:9px;fill:#dbe6ff;pointer-events:none}
 #dots circle{transition:cx .55s ease,cy .55s ease,r .18s ease,fill .3s ease}
 #secs circle{transition:cx .55s ease,cy .55s ease,r .18s ease,fill .3s ease}
-#dots g{cursor:pointer}</style></head><body>
+#dots g{cursor:pointer}
+#dots circle.pulse{transform-box:fill-box;transform-origin:center;animation:breathe 1.15s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1);stroke-opacity:.6}50%{transform:scale(1.45);stroke-opacity:1}}
+.fbar{padding:7px 14px;background:#13203a;border-bottom:1px solid #2a5a8a;font-size:14px;color:#cfe3ff}
+.fbar b{color:#ffd54f} .fbar a{color:#4fc3f7;font-weight:bold;margin:0 6px} .fbar .fclr{color:#ff8a80;cursor:pointer;font-weight:bold}</style></head><body>
 <div class="hd"><a class="bk" href="index.html">← 回戰情室</a><h2>🎯 全市場強弱四象限・時間軸回測</h2>
 <div class="s">每點=一檔股　橫軸=個股累計漲跌%　縱軸=所屬族群平均%（族群強弱）　｜　拖時間軸看資金怎麼流動；點圓點→該股5分K　｜收盤日 2026-07-09・389檔有日內資料</div></div>
 <div class="ctl">
@@ -33,6 +37,7 @@ a.bk:hover{background:#1c3a5e}
 </div>
 <div class="filt"><span class="lbl">顯示族群：</span><button class="mini" id="fall">全選</button><button class="mini" id="fnone">全不選</button><button class="mini" id="fstrong">只看強方</button><button class="mini" id="fweak">只看弱方</button><span id="chips"></span></div>
 <div class="evt"><span class="lbl">本時點：</span><span id="evtup"></span><span id="evtdn"></span></div>
+<div class="fbar" id="focusbar" style="display:none"></div>
 <div class="wrap"><svg id="sv" viewBox="0 0 940 660" width="940" height="660">
 <defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
 <line x1="64" y1="44" x2="64" y2="608" stroke="#13203a"/><text x="64" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">-10%</text><line x1="149" y1="44" x2="149" y2="608" stroke="#13203a"/><text x="149" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">-8%</text><line x1="234" y1="44" x2="234" y2="608" stroke="#13203a"/><text x="234" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">-6%</text><line x1="318" y1="44" x2="318" y2="608" stroke="#13203a"/><text x="318" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">-4%</text><line x1="403" y1="44" x2="403" y2="608" stroke="#13203a"/><text x="403" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">-2%</text><line x1="488" y1="44" x2="488" y2="608" stroke="#13203a"/><text x="488" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">+0%</text><line x1="573" y1="44" x2="573" y2="608" stroke="#13203a"/><text x="573" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">+2%</text><line x1="658" y1="44" x2="658" y2="608" stroke="#13203a"/><text x="658" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">+4%</text><line x1="742" y1="44" x2="742" y2="608" stroke="#13203a"/><text x="742" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">+6%</text><line x1="827" y1="44" x2="827" y2="608" stroke="#13203a"/><text x="827" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">+8%</text><line x1="912" y1="44" x2="912" y2="608" stroke="#13203a"/><text x="912" y="624" fill="#6f7da0" font-size="11" text-anchor="middle">+10%</text><line x1="64" y1="577" x2="912" y2="577" stroke="#13203a"/><text x="56" y="581" fill="#6f7da0" font-size="11" text-anchor="end">-8%</text><line x1="64" y1="514" x2="912" y2="514" stroke="#13203a"/><text x="56" y="518" fill="#6f7da0" font-size="11" text-anchor="end">-6%</text><line x1="64" y1="451" x2="912" y2="451" stroke="#13203a"/><text x="56" y="455" fill="#6f7da0" font-size="11" text-anchor="end">-4%</text><line x1="64" y1="389" x2="912" y2="389" stroke="#13203a"/><text x="56" y="393" fill="#6f7da0" font-size="11" text-anchor="end">-2%</text><line x1="64" y1="326" x2="912" y2="326" stroke="#13203a"/><text x="56" y="330" fill="#6f7da0" font-size="11" text-anchor="end">+0%</text><line x1="64" y1="263" x2="912" y2="263" stroke="#13203a"/><text x="56" y="267" fill="#6f7da0" font-size="11" text-anchor="end">+2%</text><line x1="64" y1="201" x2="912" y2="201" stroke="#13203a"/><text x="56" y="205" fill="#6f7da0" font-size="11" text-anchor="end">+4%</text><line x1="64" y1="138" x2="912" y2="138" stroke="#13203a"/><text x="56" y="142" fill="#6f7da0" font-size="11" text-anchor="end">+6%</text><line x1="64" y1="75" x2="912" y2="75" stroke="#13203a"/><text x="56" y="79" fill="#6f7da0" font-size="11" text-anchor="end">+8%</text><line x1="488" y1="44" x2="488" y2="608" stroke="#3a4a6a" stroke-width="1.5"/><line x1="64" y1="326" x2="912" y2="326" stroke="#3a4a6a" stroke-width="1.5"/><line x1="64" y1="608" x2="912" y2="44" stroke="#2a3a5a" stroke-width="1" stroke-dasharray="6 6"/>
@@ -62,7 +67,8 @@ const nodes=D.stocks.map(st=>{
  grp.appendChild(lab);gDots.appendChild(grp);
  const o={st,grp,c,tt,lab,baseR:5,baseCol:'#888'};
  grp.addEventListener('mouseenter',()=>{c.setAttribute('r',(o.baseR*1.9).toFixed(1));c.setAttribute('stroke','#ffffff');c.setAttribute('stroke-width','2');lab.style.display='';});
- grp.addEventListener('mouseleave',()=>{c.setAttribute('r',o.baseR.toFixed(1));c.setAttribute('stroke',o.baseCol);c.setAttribute('stroke-width','1');lab.style.display=showName?'':'none';});
+ grp.addEventListener('mouseleave',()=>{c.setAttribute('r',o.baseR.toFixed(1));c.setAttribute('stroke',o.baseStroke||o.baseCol);c.setAttribute('stroke-width',o.baseSW||'1');lab.style.display=o.labOn?'':'none';});
+ grp.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();focusOn(o);});
  return o;
 });
 const secnodes=D.secs.map(sec=>{
@@ -85,21 +91,29 @@ document.getElementById('fnone').onclick=()=>{enabled=new Set();saveEn();renderC
 document.getElementById('fstrong').onclick=()=>{const i=ti;enabled=new Set(D.secs.filter(s=>{const a=D.secavg[s];return a&&a[i]!=null&&a[i]>=0;}));saveEn();renderChips();update(ti);};
 document.getElementById('fweak').onclick=()=>{const i=ti;enabled=new Set(D.secs.filter(s=>{const a=D.secavg[s];return a&&a[i]!=null&&a[i]<0;}));saveEn();renderChips();update(ti);};
 function secAvg(sec,i){const a=D.secavg[sec];return a?a[i]:null;}
-let showName=false,view='stock',ti=0,timer=null;
+let showName=true,view='stock',ti=0,timer=null,focusSec=null,focusCode=null;
+function focusOn(o){if(focusCode===o.st.c){focusSec=null;focusCode=null;}else{focusSec=o.st.s;focusCode=o.st.c;}renderFocusBar();update(ti);}
+function renderFocusBar(){const fb=document.getElementById('focusbar');if(!focusCode){fb.style.display='none';return;}const o=nodes.find(n=>n.st.c===focusCode);fb.style.display='';const lk=o.st.lk?'<a href="突破_'+o.st.c+'.html" target="_blank">看5分K</a>':'';fb.innerHTML='🔒 鎖定 <b>'+o.st.n+' '+o.st.c+'</b>（'+o.st.s+'族・只亮同族）　'+lk+'<span class="fclr" id="fclr">✕ 取消</span>';document.getElementById('fclr').onclick=()=>{focusSec=null;focusCode=null;renderFocusBar();update(ti);};}
 const tr=document.getElementById('tr');tr.max=D.times.length-1;
 function update(i){
  ti=i;document.getElementById('tlab').textContent=D.tlabels[i];tr.value=i;
  const prev=i>0?i-1:0;const up=[],dn=[];
  nodes.forEach(o=>{
   const v=o.st.v[i],y=secAvg(o.st.s,i);
-  if(view!=='stock'||!enabled.has(o.st.s)||v==null||y==null){o.grp.style.display='none';return;}
+  if(view!=='stock'||!enabled.has(o.st.s)||v==null||y==null){o.grp.style.display='none';o.c.classList.remove('pulse');return;}
   o.grp.style.display='';
-  const cx=X(v),cy=Y(y),col=v>=0?'#ff5252':'#26a69a',r=4+Math.min(6,Math.abs(v)/2);
-  o.baseR=r;o.baseCol=col;
+  const dim=focusSec&&o.st.s!==focusSec, foc=focusCode===o.st.c;
+  const cx=X(v),cy=Y(y),col=v>=0?'#ff5252':'#26a69a';
+  let r=4+Math.min(6,Math.abs(v)/2); if(foc)r*=1.6;
+  o.c.classList.toggle('pulse', v>=7&&!dim);
+  const stroke=foc?'#ffffff':col, sw=foc?'2.5':'1';
+  o.baseR=r;o.baseCol=col;o.baseStroke=stroke;o.baseSW=sw;
   o.c.setAttribute('cx',cx.toFixed(1));o.c.setAttribute('cy',cy.toFixed(1));
-  o.c.setAttribute('r',r.toFixed(1));o.c.setAttribute('fill',col);o.c.setAttribute('fill-opacity','0.82');o.c.setAttribute('stroke',col);
+  o.c.setAttribute('r',r.toFixed(1));o.c.setAttribute('fill',col);
+  o.c.setAttribute('fill-opacity',dim?'0.1':'0.85');o.c.setAttribute('stroke',stroke);o.c.setAttribute('stroke-width',sw);
   o.tt.textContent=o.st.n+' '+o.st.c+'｜個股'+(v>=0?'+':'')+v+'%｜'+o.st.s+'族'+((y>=0?'+':'')+y)+'%';
-  o.lab.setAttribute('x',(cx+6).toFixed(1));o.lab.setAttribute('y',(cy+3).toFixed(1));o.lab.style.display=showName?'':'none';
+  const labOn=!dim&&(showName||foc||(focusSec&&o.st.s===focusSec));o.labOn=labOn;
+  o.lab.setAttribute('x',(cx+6).toFixed(1));o.lab.setAttribute('y',(cy+3).toFixed(1));o.lab.style.display=labOn?'':'none';
   const pv=o.st.v[prev];
   if(pv!=null&&i>0){if(pv<0&&v>=0)up.push(o.st.n);else if(pv>=0&&v<0)dn.push(o.st.n);}
  });
@@ -123,5 +137,7 @@ document.getElementById('play').addEventListener('click',e=>{
  e.target.textContent='⏸ 暫停';e.target.classList.add('on');
  timer=setInterval(()=>{let n=ti+1;if(n>=D.times.length){n=0;}update(n);},700);
 });
+if(showName){const _mb=document.getElementById('mode');_mb.textContent='🔵 只看亮點';_mb.classList.add('on');}
+document.getElementById('sv').addEventListener('click',e=>{const t=e.target;if((t.id==='sv'||t.tagName==='line'||t.tagName==='text')&&focusCode){focusSec=null;focusCode=null;renderFocusBar();update(ti);}});
 renderChips();update(D.times.length-1);
 </script></body></html>
