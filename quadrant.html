@@ -18,7 +18,10 @@ a.bk:hover{background:#1c3a5e}
 .evt .lbl{color:#9fb3d1} .evt .up{background:#3a1015;border:1px solid #c0152b;color:#ff8a80;border-radius:5px;padding:1px 7px}
 .evt .dn{background:#0d2a1e;border:1px solid #2e7d4f;color:#8ff0c0;border-radius:5px;padding:1px 7px}
 .wrap{padding:6px 8px;overflow-x:auto} svg{display:block;margin:0 auto;max-width:100%;height:auto}
-.qcap{fill:#8aa6e0} .dotlab{font-size:9px;fill:#dbe6ff;pointer-events:none}</style></head><body>
+.qcap{fill:#8aa6e0} .dotlab{font-size:9px;fill:#dbe6ff;pointer-events:none}
+#dots circle{transition:cx .55s ease,cy .55s ease,r .18s ease,fill .3s ease}
+#secs circle{transition:cx .55s ease,cy .55s ease,r .18s ease,fill .3s ease}
+#dots g{cursor:pointer}</style></head><body>
 <div class="hd"><a class="bk" href="index.html">← 回戰情室</a><h2>🎯 全市場強弱四象限・時間軸回測</h2>
 <div class="s">每點=一檔股　橫軸=個股累計漲跌%　縱軸=所屬族群平均%（族群強弱）　｜　拖時間軸看資金怎麼流動；點圓點→該股5分K　｜收盤日 2026-07-09・389檔有日內資料</div></div>
 <div class="ctl">
@@ -57,7 +60,10 @@ const nodes=D.stocks.map(st=>{
  const lab=document.createElementNS(svgns,'text');lab.setAttribute('class','dotlab');lab.style.display='none';lab.textContent=st.n;
  if(st.lk){const a=document.createElementNS(svgns,'a');a.setAttribute('href','突破_'+st.c+'.html');a.setAttribute('target','_blank');a.appendChild(c);grp.appendChild(a);}else{grp.appendChild(c);}
  grp.appendChild(lab);gDots.appendChild(grp);
- return {st,grp,c,tt,lab};
+ const o={st,grp,c,tt,lab,baseR:5,baseCol:'#888'};
+ grp.addEventListener('mouseenter',()=>{c.setAttribute('r',(o.baseR*1.9).toFixed(1));c.setAttribute('stroke','#ffffff');c.setAttribute('stroke-width','2');lab.style.display='';});
+ grp.addEventListener('mouseleave',()=>{c.setAttribute('r',o.baseR.toFixed(1));c.setAttribute('stroke',o.baseCol);c.setAttribute('stroke-width','1');lab.style.display=showName?'':'none';});
+ return o;
 });
 const secnodes=D.secs.map(sec=>{
  const grp=document.createElementNS(svgns,'g');
@@ -89,6 +95,7 @@ function update(i){
   if(view!=='stock'||!enabled.has(o.st.s)||v==null||y==null){o.grp.style.display='none';return;}
   o.grp.style.display='';
   const cx=X(v),cy=Y(y),col=v>=0?'#ff5252':'#26a69a',r=4+Math.min(6,Math.abs(v)/2);
+  o.baseR=r;o.baseCol=col;
   o.c.setAttribute('cx',cx.toFixed(1));o.c.setAttribute('cy',cy.toFixed(1));
   o.c.setAttribute('r',r.toFixed(1));o.c.setAttribute('fill',col);o.c.setAttribute('fill-opacity','0.82');o.c.setAttribute('stroke',col);
   o.tt.textContent=o.st.n+' '+o.st.c+'｜個股'+(v>=0?'+':'')+v+'%｜'+o.st.s+'族'+((y>=0?'+':'')+y)+'%';
