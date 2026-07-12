@@ -3,5 +3,6 @@
 holdings.html
 signal_history.json
 released_track.json
+chips_cache.json
 _*.png
 *.docx
