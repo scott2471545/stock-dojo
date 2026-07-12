@@ -1,0 +1,10 @@
+import pkg from './000_Agent/skills_local/cards/node_modules/playwright/index.js';
+const { chromium } = pkg;
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 1200, height: 520 }, deviceScaleFactor: 1.6 });
+const errs=[]; p.on('console',m=>{if(m.type()==='error')errs.push(m.text());});
+await p.goto('file:///D:/MarkAI/output/dojo/quadrant.html',{waitUntil:'networkidle'});
+await p.waitForTimeout(1000);
+await p.screenshot({ path:'output/dojo/_dcpanel.png', clip:{x:0,y:70,width:1200,height:430} });
+console.log('errors:', errs.length?errs.join(' | '):'none');
+await b.close();
