@@ -1,0 +1,6 @@
+# 含品牌名/個人資料，不上公開雲端
+條件單.xlsx
+signal_history.json
+released_track.json
+_*.png
+*.docx
