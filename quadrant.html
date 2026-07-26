@@ -37,10 +37,13 @@ a.bk:hover{background:#1c3a5e}
 .qi a{color:#4fc3f7;text-decoration:none;font-weight:bold} .qi .qv{color:#7f8db0;font-size:11px}
 .qe{color:#6f7da0;font-size:12px;padding:6px 0}</style></head><body>
 <div class="hd"><a class="bk" href="index.html">← 回戰情室</a><h2>🎯 全市場強弱四象限・時間軸回測</h2>
-<div class="s">每點=一檔股　橫軸=個股累計漲跌%　縱軸=所屬族群平均%（族群強弱）　｜　拖時間軸看資金怎麼流動；點圓點→該股5分K　｜　<b style="color:#ffd54f">⭐=我的持股</b>・淡線=當日軌跡・按<b>➹向量</b>看開盤→現在・四角自動標龍頭　｜收盤日 2026-07-24・<b style="color:#26c281">即時19:25</b>・420檔</div></div>
+<div class="s">每點=一檔股　橫軸=個股累計漲跌%　縱軸=所屬族群平均%（族群強弱）　｜　拖時間軸看資金怎麼流動（◀格/格▶逐格·速度0.5/1/2x·鍵盤←→步進）；點圓點→該股5分K　｜　<b style="color:#ffd54f">⭐=我的持股</b>・淡線=當日軌跡・按<b>➹向量</b>看開盤→現在・四角自動標龍頭　｜收盤日 2026-07-24・<b style="color:#26c281">即時19:36</b>・420檔</div></div>
 <div class="qpanel"><div class="qtone" style="border-color:#ff5252"><b style="color:#ff5252">🧭 盤面定調：順勢盤</b>　<span class="qtd">強者恆強、弱者恆弱 → 跟強勢族群、空弱族</span><div class="qzc">象限分布　右上強多 27｜左下弱空 310｜右下追高 65｜左上逢黑 18</div></div></div>
 <div class="ctl">
+<button class="btn" id="stepb" title="上一格(← 鍵)">◀格</button>
 <button class="btn" id="play">▶ 播放</button>
+<button class="btn" id="stepf" title="下一格(→ 鍵)">格▶</button>
+<button class="btn" id="speed" title="播放速度(慢/正常/快)">⏩ 1x</button>
 <span id="tlab">--:--</span>
 <input type="range" id="tr" min="0" max="0" value="0" step="1">
 <button class="btn" id="view">🏷 族群模式</button>
@@ -198,11 +201,17 @@ tr.addEventListener('input',e=>update(+e.target.value));
 document.getElementById('mode').addEventListener('click',e=>{showName=!showName;e.target.classList.toggle('on',showName);e.target.textContent=showName?'🔵 只看亮點':'🫧 泡泡名';update(ti);});
 document.getElementById('view').addEventListener('click',e=>{view=(view==='stock')?'sector':'stock';e.target.classList.toggle('on',view==='sector');e.target.textContent=(view==='sector')?'👤 個股模式':'🏷 族群模式';update(ti);});
 document.getElementById('vec').addEventListener('click',e=>{vecMode=!vecMode;e.target.classList.toggle('on',vecMode);e.target.textContent=vecMode?'✦ 拖尾':'➹ 向量';update(ti);});
+let speed=1;const BASE_MS=700;
+function playTick(){let n=ti+1;if(n>=D.times.length)n=0;update(n);}
 document.getElementById('play').addEventListener('click',e=>{
  if(timer){clearInterval(timer);timer=null;e.target.textContent='▶ 播放';e.target.classList.remove('on');return;}
  e.target.textContent='⏸ 暫停';e.target.classList.add('on');
- timer=setInterval(()=>{let n=ti+1;if(n>=D.times.length){n=0;}update(n);},700);
+ timer=setInterval(playTick,BASE_MS/speed);
 });
+document.getElementById('stepb').onclick=()=>update(Math.max(0,ti-1));
+document.getElementById('stepf').onclick=()=>update(Math.min(D.times.length-1,ti+1));
+document.getElementById('speed').onclick=e=>{speed=(speed===1?2:(speed===2?0.5:1));e.target.textContent='⏩ '+speed+'x';if(timer){clearInterval(timer);timer=setInterval(playTick,BASE_MS/speed);}};
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){update(Math.max(0,ti-1));e.preventDefault();}else if(e.key==='ArrowRight'){update(Math.min(D.times.length-1,ti+1));e.preventDefault();}});
 if(showName){const _mb=document.getElementById('mode');_mb.textContent='🔵 只看亮點';_mb.classList.add('on');}
 document.getElementById('sv').addEventListener('click',e=>{const t=e.target;if((t.id==='sv'||t.tagName==='line'||t.tagName==='text')&&focusCode){focusSec=null;focusCode=null;renderFocusBar();update(ti);}});
 renderChips();update(D.times.length-1);
