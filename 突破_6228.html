@@ -10,15 +10,15 @@
 .cmb{border-radius:5px;padding:2px 8px;font-weight:bold;background:#0a0e1a}</style></head><body>
 <div class="hd"><a class="bk" href="index.html">← 回戰情室</a>
 <h2>📈 6228 全譜　多空戰法（5分K）</h2>
-<div class="s">2026-08-04　收 <b>18.00</b>　｜　突破門檻 <b>18.05</b>（起漲K高點）　｜　站上確認：<b>未確認</b>　</div>
-<div class="s">🎯 第一根高 <b style="color:#ffd54f">18.05</b>　現價→<b style="color:#26a69a">空</b>　｜　5MA <b>17.86</b> / 20MA <b>—</b> →<b style="color:#9fb3d1">月線—</b>　｜　綜合 <span class="cmb" style="color:#ffb300">空＋月線—</span>　<span style="color:#6f7da0">紫=5MA 深紫=20MA 金=第一根高 青=突破門檻</span></div></div>
+<div class="s">2026-08-04　收 <b>17.80</b>　｜　突破門檻 <b>18.05</b>（起漲K高點）　｜　站上確認：<b>未確認</b>　</div>
+<div class="s">🎯 第一根高 <b style="color:#ffd54f">18.05</b>　現價→<b style="color:#26a69a">空</b>　｜　5MA <b>18.03</b> / 20MA <b>—</b> →<b style="color:#9fb3d1">月線—</b>　｜　綜合 <span class="cmb" style="color:#ffb300">空＋月線—</span>　<span style="color:#6f7da0">紫=5MA 深紫=20MA 金=第一根高 青=突破門檻</span></div></div>
 <div class="nav"><a href="突破_3709.html">◀ 鑫聯大投控</a><a class="bk" href="index.html">⌂ 戰情室</a><a href="突破_3287.html">廣寰科 ▶</a></div>
 <div class="ohlc" id="ohlc">移動游標看每根K棒的 開/收/低/高</div>
 <div id="c"></div><script>
 const ch=LightweightCharts.createChart(document.getElementById('c'),{layout:{background:{color:'#0a0e1a'},textColor:'#9fb3d1'},grid:{vertLines:{color:'#13203a'},horzLines:{color:'#13203a'}},timeScale:{timeVisible:true,secondsVisible:false},rightPriceScale:{borderColor:'#1c2c4a'}});
 const s=ch.addCandlestickSeries({upColor:'#ff5252',downColor:'#26a69a',borderUpColor:'#ff5252',borderDownColor:'#26a69a',wickUpColor:'#ff5252',wickDownColor:'#26a69a'});
-s.setData([{"time": 1785835200, "open": 18.049999237060547, "high": 18.049999237060547, "low": 18.049999237060547, "close": 18.049999237060547}, {"time": 1785835500, "open": 18.049999237060547, "high": 18.049999237060547, "low": 18.049999237060547, "close": 18.049999237060547}, {"time": 1785837000, "open": 18.0, "high": 18.0, "low": 18.0, "close": 18.0}]);
-const ma5=ch.addLineSeries({color:'#e040fb',lineWidth:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});ma5.setData([{"time": 1785835200, "value": 17.95}, {"time": 1785835500, "value": 17.90999984741211}, {"time": 1785837000, "value": 17.85999984741211}]);
+s.setData([{"time": 1785835200, "open": 18.049999237060547, "high": 18.049999237060547, "low": 18.049999237060547, "close": 18.049999237060547}, {"time": 1785835500, "open": 18.049999237060547, "high": 18.049999237060547, "low": 18.049999237060547, "close": 18.049999237060547}, {"time": 1785837000, "open": 18.0, "high": 18.0, "low": 18.0, "close": 18.0}, {"time": 1785845700, "open": 17.799999237060547, "high": 17.799999237060547, "low": 17.799999237060547, "close": 17.799999237060547}]);
+const ma5=ch.addLineSeries({color:'#e040fb',lineWidth:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});ma5.setData([{"time": 1785835200, "value": 17.95}, {"time": 1785835500, "value": 17.90999984741211}, {"time": 1785837000, "value": 17.85999984741211}, {"time": 1785845700, "value": 18.02999954223633}]);
 const ma20=ch.addLineSeries({color:'#7e57c2',lineWidth:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});ma20.setData([]);
 s.createPriceLine({price:18.05,color:'#ffd54f',lineWidth:2,lineStyle:0,axisLabelVisible:true,title:'第一根高 18.05'});
 s.createPriceLine({price:18.05,color:'#4fc3f7',lineWidth:1,lineStyle:2,axisLabelVisible:true,title:'門檻 18.05'});
