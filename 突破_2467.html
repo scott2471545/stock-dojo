@@ -17,7 +17,7 @@
 <div id="c"></div><script>
 const ch=LightweightCharts.createChart(document.getElementById('c'),{layout:{background:{color:'#0a0e1a'},textColor:'#9fb3d1'},grid:{vertLines:{color:'#13203a'},horzLines:{color:'#13203a'}},timeScale:{timeVisible:true,secondsVisible:false},rightPriceScale:{borderColor:'#1c2c4a'}});
 const s=ch.addCandlestickSeries({upColor:'#ff5252',downColor:'#26a69a',borderUpColor:'#ff5252',borderDownColor:'#26a69a',wickUpColor:'#ff5252',wickDownColor:'#26a69a'});
-s.setData([{"time": 1789462800, "open": 527.0, "high": 541.0, "low": 527.0, "close": 533.0}, {"time": 1789463100, "open": 535.0, "high": 535.0, "low": 530.0, "close": 533.0}, {"time": 1789463400, "open": 534.0, "high": 534.0, "low": 534.0, "close": 534.0}]);
+s.setData([{"time": 1789462800, "open": 527.0, "high": 541.0, "low": 527.0, "close": 533.0}, {"time": 1789463100, "open": 535.0, "high": 535.0, "low": 530.0, "close": 533.0}, {"time": 1789463400, "open": 534.0, "high": 536.0, "low": 533.0, "close": 534.0}]);
 const ma5=ch.addLineSeries({color:'#e040fb',lineWidth:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});ma5.setData([{"time": 1789462800, "value": 535.8}, {"time": 1789463100, "value": 535.0}, {"time": 1789463400, "value": 534.6}]);
 const ma20=ch.addLineSeries({color:'#7e57c2',lineWidth:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});ma20.setData([{"time": 1789462800, "value": 538.05}, {"time": 1789463100, "value": 537.8}, {"time": 1789463400, "value": 537.6}]);
 s.createPriceLine({price:541.00,color:'#ffd54f',lineWidth:2,lineStyle:0,axisLabelVisible:true,title:'第一根高 541.00'});
