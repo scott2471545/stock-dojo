@@ -2,6 +2,20 @@
 const Views = {};
 let META = null;
 
+/* 戰情室（盤中）外部連結——用絕對網址，Artifact 與 GitHub Pages 都能開 */
+const WARROOM_BASE = 'https://scott2471545.github.io/stock-dojo/';
+const WARROOM = [
+  {name:'族群強弱牆', page:'index.html', use:'51 族群紅綠強弱一覽', icon:'🧱'},
+  {name:'四象限', page:'quadrant.html', use:'個股當日% × 族群強弱%', icon:'🎯'},
+  {name:'開盤突破K', page:'breakout.html', use:'5分K 突破起漲確認', icon:'📈'},
+  {name:'處置監獄', page:'dispose.html', use:'處置中／出獄名單', icon:'🔒'},
+  {name:'逢黑觀察', page:'hei.html', use:'逢黑貼線買點', icon:'⚫'},
+  {name:'籌碼比較', page:'chip_compare.html', use:'族群籌碼對照', icon:'💰'},
+  {name:'記分板', page:'scoreboard.html', use:'均線分數／強弱記分', icon:'🏅'},
+  {name:'空方觀察', page:'short.html', use:'弱勢空單觀察', icon:'🔻'},
+];
+const warUrl = (p)=> WARROOM_BASE + p;
+
 /* ---------- 共用小元件 ---------- */
 function h2(title, tagHtml){ return `<h2>${title}${tagHtml?`<span class="tag">${tagHtml}</span>`:''}</h2>`; }
 function pageTitle(icon,name,sub){ return `<div class="pagetitle">${icon} ${name}</div>${sub?`<div class="pagesub">${sub}</div>`:''}`; }
@@ -30,6 +44,14 @@ Views.home = async ()=>{
     <span class="chip" onclick="Router.go('health')">💰 持股健診</span>
     <span class="chip" onclick="Router.go('daily')">📰 波段日報</span>
     <span class="chip" onclick="Router.go('mascore')">🏆 均線分數榜</span></div>${demo}`));
+  // 🔴 盤中・戰情室（外部連結，新分頁開）
+  c.appendChild(el('div','grp-title','🔴 盤中・戰情室（即時族群/技術）'));
+  const wgrid=el('div','grid2');
+  WARROOM.forEach(w=>{const card=el('div','tool-card');
+    card.innerHTML=`<div class="tc-name">${w.icon} ${esc(w.name)} ↗</div><div class="tc-use">${esc(w.use)}</div><div class="tc-foot">戰情室・盤中即時</div>`;
+    card.onclick=()=>window.open(warUrl(w.page),'_blank','noopener');wgrid.appendChild(card);});
+  c.appendChild(wgrid);
+  c.appendChild(el('div','grp-title','🔵 盤後・研究書房（收盤研究/學習）'));
   // 最近查詢
   const rec=getRecent();
   if(rec.length){const r=el('div','card',h2('🕘 最近查詢'));const ch=el('div','chips');

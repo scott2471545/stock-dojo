@@ -15,10 +15,14 @@
     const p = document.getElementById('drawerPanel');
     const groups = {};
     (META.tools||[]).forEach(t=>{(groups[t.group]=groups[t.group]||[]).push(t)});
-    let html = `<div style="font-weight:800;font-size:16px;margin-bottom:8px">📚 台股研究書房</div>
+    let html = `<div style="font-weight:800;font-size:16px;margin-bottom:8px">📚 台股工作台</div>
       <a class="nav-item" href="#/home">🏠 首頁</a>`;
+    // 盤中・戰情室（外部連結）
+    html += `<div class="grp">🔴 盤中・戰情室</div>`;
+    WARROOM.forEach(w=>{ html += `<a class="nav-item" href="${warUrl(w.page)}" target="_blank" rel="noopener">${w.icon} ${esc(w.name)} ↗<small>${esc(w.use)}</small></a>`; });
+    html += `<div class="grp">🔵 盤後・研究書房</div>`;
     Object.keys(groups).forEach(g=>{
-      html += `<div class="grp">${esc(g)}</div>`;
+      html += `<div class="grp" style="opacity:.7;font-size:12px">${esc(g)}</div>`;
       groups[g].forEach(t=>{ html += `<a class="nav-item" href="#/${t.id}">${esc(t.name)}<small>${esc(t.use)}</small></a>`; });
     });
     p.innerHTML = html;
