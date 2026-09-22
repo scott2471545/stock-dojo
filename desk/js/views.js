@@ -39,7 +39,7 @@ function defenseGrid(def){
 Views.home = async ()=>{
   const c=el('div');
   const demo = META.demo ? `<div class="demo-banner">⚠ <b>示範資料</b>・截至 ${META.asOf} 收盤・非即時行情。${esc(META.note||'')}</div>`:'';
-  c.appendChild(el('div','hero',`<h1>🏠 台股研究書房</h1><div class="pagesub">收盤後研究與學習・本機專用・僅供參考不構成投資建議</div>
+  c.appendChild(el('div','hero',`<h1>🏠 台股工作台</h1><div class="pagesub">盤中看戰情室、盤後進研究書房・僅供研究學習，不構成投資建議</div>
     <div class="chips" style="margin-top:8px"><span class="chip" onclick="Router.go('diag',{code:'2426'})">🩺 個股問診</span>
     <span class="chip" onclick="Router.go('health')">💰 持股健診</span>
     <span class="chip" onclick="Router.go('daily')">📰 波段日報</span>
