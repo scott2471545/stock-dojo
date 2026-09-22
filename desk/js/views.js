@@ -130,7 +130,7 @@ Views.diag = async (q)=>{
   box.appendChild(mk('族群名次',`第 ${S.sectorRank.value??'—'}`,`共 ${S.sectorRank.total} 族`,`<div class="explain">🔎 所屬族群在 ${S.sectorRank.total} 族中的強度名次，越小越前段。</div>`));
   box.appendChild(mk('個股族內名次',`第 ${S.inRank.value??'—'}/${S.inRank.total}`,'同族當日強弱',`<div class="explain">🔎 同族 ${S.inRank.total} 檔，本檔今日排第 ${S.inRank.value}。</div>`));
   box.appendChild(mk('籌碼變化',S.chip&&S.chip.weekPct!=null?`${S.chip.weekPct>0?'+':''}${fmt(S.chip.weekPct)}%`:'<span class="nodata">無資料</span>',S.chip&&S.chip.rank84?`84榜第${S.chip.rank84}`:'',`<div class="explain">🔎 週籌碼變化（示範規則・待確認）。</div>${S.chip?`<div class="row"><span>近8週</span>${spark(S.chip.spark8w)}</div>`:''}`,true));
-  box.appendChild(mk('本益比',S.estPE.value!=null?fmt(S.estPE.value,1):'<span class="nodata">無資料</span>',S.estPE.real?'官方當日':(S.estPE.value!=null?`落點 ${esc(S.estPE.layer||'')}`:esc(S.estPE.reason||'')),`<div class="explain">🔎 ${S.estPE.real?'TWSE/TPEx 當日本益比。':(S.estPE.value==null?'獲利太薄或資料不足時不硬估。':'本平台自有估值模型。')}</div>`+(S.estPE.value!=null&&!S.estPE.real?`<div class="row"><span></span><span class="lk" onclick="Router.go('valuation',{code:'${d.code}'})">看估值河流圖 →</span></div>`:'')));
+  box.appendChild(mk('本益比',S.estPE.value!=null?fmt(S.estPE.value,1):'<span class="nodata">無資料</span>',S.estPE.real?'官方當日':(S.estPE.value!=null?`落點 ${esc(S.estPE.layer||'')}`:esc(S.estPE.reason||'')),`<div class="explain">🔎 ${S.estPE.real?'TWSE/TPEx 當日本益比。':(S.estPE.value==null?'獲利太薄或資料不足時不硬估。':'本平台自有估值模型。')}</div>`+(S.estPE.value!=null?`<div class="row"><span></span><span class="lk" onclick="Router.go('valuation',{code:'${d.code}'})">看估值河流圖 →</span></div>`:'')));
   box.appendChild(mk('營收成長',S.revenue?`${S.revenue.yoy>0?'+':''}${fmt(S.revenue.yoy,1)}%`:'<span class="nodata">無資料</span>',S.revenue?`${S.revenue.month} 年增`:'',S.revenue?`<div class="row"><span>單月/月增/累計</span><b>${S.revenue.cur}億・${S.revenue.mom>0?'+':''}${fmt(S.revenue.mom,1)}%・累計${S.revenue.cumYoy>0?'+':''}${fmt(S.revenue.cumYoy,1)}%</b></div><div class="row"><span>首次公布</span><span>${S.revenue.firstPub}</span></div>`:''));
   box.appendChild(mk('法人買賣超',S.inst?`${(S.inst.today??S.inst.net5)>0?'+':''}${fmtInt(S.inst.today??S.inst.net5)} 張`:'<span class="nodata">無資料</span>',S.inst?`當日三大法人`:'',S.inst?`<div class="row"><span>外資/投信/自營</span><b>${fmtInt(S.inst.foreign)}/${fmtInt(S.inst.invest)}/${fmtInt(S.inst.dealer)}</b></div><div class="row"><span>資料日</span><span>${esc(S.inst.asOf||d.asOf)}</span></div>${S.inst.spark10?`<div class="row"><span>近10日</span>${spark(S.inst.spark10)}</div>`:''}<div class="explain">🔎 三大法人當日買賣超（TWSE/TPEx）。</div>`:''));
   sub.appendChild(box);c.appendChild(sub);
@@ -326,15 +326,16 @@ Views.valuation = async (q)=>{
   const code=q.code;if(!code){c.appendChild(el('div','empty','輸入股號查估值。'));return c;}
   const d=await API.get('/valuation',{code});if(d.error){c.appendChild(el('div','card',`查無 ${esc(code)}`));return c;}
   const v=d.valuation;
-  const card=el('div','card',h2(`${esc(d.name)} ${d.code}`,(d.prov.demo?'示範':'真實報價')+' '+d.asOf));
-  if(!v.ok){card.appendChild(el('div','badge warn',v.reason));card.appendChild(el('div','note','獲利太薄/虧損/資料不足時不提供估值，不硬畫便宜區。'));c.appendChild(card);return c;}
-  card.appendChild(riverChart(d.series, v));
+  const card=el('div','card',h2(`${esc(d.name)} ${d.code}`,(v.real?'真實':'示範')+' '+d.asOf));
+  if(!v.ok){card.appendChild(el('div','badge warn',v.reason));card.appendChild(el('div','note','虧損或本益比無資料時不提供估值，不硬畫便宜區。'));c.appendChild(card);return c;}
+  card.appendChild(riverChart(d.series, v, d.span));
   card.innerHTML+=`<div class="chips" style="margin-top:8px">${v.labels.map((l,i)=>`<span class="chip">${l} ${fmt(v.prices[i],0)}</span>`).join('')}</div>
-    <div class="note" style="margin-top:8px">現價 <b class="mono">${fmt(v.close)}</b>・落在 <b>${esc(v.layer)}</b>・距中間基準 ${fmt(v.mid)} 為 <span class="${dirClass(v.distMidPct)}">${signPct(v.distMidPct)}</span></div>
-    <div class="mini-note" style="margin-top:8px">預估年 EPS ${fmt(v.eps)} × 本益比區間 [${v.bands.join(', ')}]（示範 EPS）。估值帶為固定倍數（正式版可隨財報期間變動）。${esc(v.note)}</div>`;
+    <div class="note" style="margin-top:8px">現價 <b class="mono">${fmt(v.close)}</b>・落在 <b>${esc(v.layer)}</b>・距合理中值 ${fmt(v.mid)} 為 <span class="${dirClass(v.distMidPct)}">${signPct(v.distMidPct)}</span></div>
+    <div class="mini-note" style="margin-top:8px">${v.real?`近四季 EPS <b>${fmt(v.eps)}</b>（現價÷官方本益比 ${fmt(v.per,1)}）・合理基準本益比 <b>${fmt(v.basePE,1)}</b>${d.industryPE?`（同業中位數）`:'（自身PER）'}。`:`示範 EPS ${fmt(v.eps)}。`}${esc(v.note)}</div>
+    <div class="mini-note">價格線：${esc(d.span||'')}。EPS 以近四季（trailing）近似、非預估；財報換季後會更新。</div>`;
   c.appendChild(card);return c;
 };
-function riverChart(series, v){
+function riverChart(series, v, span){
   const W=560,H=240,padL=44,padR=10,padT=10,padB=22;
   const closes=series.map(s=>s.close);
   const lo=Math.min(v.prices[0], ...closes), hi=Math.max(v.prices[3], ...closes);
@@ -352,14 +353,13 @@ function riverChart(series, v){
   // 股價折線
   const pts=series.map((s,i)=>`${X(i).toFixed(1)},${Y(s.close).toFixed(1)}`).join(' ');
   const lastY=Y(series[series.length-1].close),lastX=X(series.length-1);
-  const first=series[0].date, last=series[series.length-1].date;
   const wrap=el('div');
   wrap.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="border-radius:8px;background:var(--card-2)">
     ${bands}${lines}
     <polyline fill="none" stroke="var(--gold)" stroke-width="2" points="${pts}"/>
     <circle cx="${lastX}" cy="${lastY}" r="3" fill="var(--gold)"/>
-    <text x="${padL}" y="${H-6}" fill="var(--muted)" font-size="9">${first}</text>
-    <text x="${W-padR}" y="${H-6}" fill="var(--muted)" font-size="9" text-anchor="end">${last}</text>
+    <text x="${padL}" y="${H-6}" fill="var(--muted)" font-size="9">${esc(span||'較早')}</text>
+    <text x="${W-padR}" y="${H-6}" fill="var(--muted)" font-size="9" text-anchor="end">現在</text>
   </svg>`;
   return wrap;
 }
