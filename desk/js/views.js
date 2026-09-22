@@ -104,7 +104,7 @@ Views.diag = async (q)=>{
      <div class="price-row"><span class="px mono ${dirClass(d.chg)}">${fmt(d.close)}</span>
       <span class="chg mono ${dirClass(d.chg)}">${arrow(d.chg)} ${signPct(d.chg)}</span></div>
      <div class="note">📅 ${d.asOf} 收盤・昨收 ${fmt(d.prevClose)}｜來源 ${esc(d.prov.source)}・${d.prov.demo?'示範資料':'正式'}</div>
-     <div class="chips" style="margin-top:8px"><a class="chip" href="${warUrl('突破_'+d.code+'.html')}" target="_blank" rel="noopener">🔴 盤中突破K ↗</a><a class="chip" href="${WARROOM_BASE}" target="_blank" rel="noopener">🧱 族群牆 ↗</a></div>`));
+     <div class="chips" style="margin-top:8px">${(META.warroomCodes||[]).includes(d.code)?`<a class="chip" href="${warUrl('突破_'+d.code+'.html')}" target="_blank" rel="noopener">🔴 盤中突破K ↗</a>`:''}<a class="chip" href="${WARROOM_BASE}" target="_blank" rel="noopener">🧱 族群牆 ↗</a></div>`));
   // 總覽
   const ov=el('div','card',h2('🩺 個股總覽', d.defenses.statusLabel));
   ov.appendChild(el('div','chips',
