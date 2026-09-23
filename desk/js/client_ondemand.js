@@ -60,7 +60,9 @@
       case '/disposals': return await idx('disposals');
       case '/mascore': return await idx('mascore');
       case '/sectors': return await idx('sectors');
-      case '/chip': { const c=norm(params.code); const base=await idx('chip'); let detail=null; if(c){ const f=await stk(c); /* 個股籌碼多為無資料 */ } return Object.assign({},base,{detail}); }
+      case '/chip': { const c=norm(params.code); const base=await idx('chip'); let detail=null;
+        if(c){ const f=await stk(c); if(f&&f.stock&&f.stock.subjects&&f.stock.subjects.chip){ detail={code:c,name:f.stock.name,chip:f.stock.subjects.chip,inst:f.stock.subjects.inst||{},peers:[]}; } }
+        return Object.assign({},base,{detail}); }
       case '/industries': return (await idx('industries')).list;
       case '/industry': { const i=await idx('industries'); return i.detail[params.id]||{error:'not_found'}; }
       case '/daily': return await idx('daily');
