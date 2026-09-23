@@ -129,7 +129,7 @@ Views.diag = async (q)=>{
     `<div class="row"><span>站上均線/創新高/多頭排列</span><b>${S.maScore.above}・${S.maScore.newHigh}・${S.maScore.align}</b></div><div class="explain">🔎 站上6均線+創6新高+多頭排列滿15；≥8多方。</div><div class="row"><span>近10日</span>${spark(S.maScore.spark10)}</div>`));
   box.appendChild(mk('族群名次',`第 ${S.sectorRank.value??'—'}`,`共 ${S.sectorRank.total} 族`,`<div class="explain">🔎 所屬族群在 ${S.sectorRank.total} 族中的強度名次，越小越前段。</div>`));
   box.appendChild(mk('個股族內名次',`第 ${S.inRank.value??'—'}/${S.inRank.total}`,'同族當日強弱',`<div class="explain">🔎 同族 ${S.inRank.total} 檔，本檔今日排第 ${S.inRank.value}。</div>`));
-  box.appendChild(mk('籌碼變化',S.chip&&S.chip.weekPct!=null?`${S.chip.weekPct>0?'+':''}${fmt(S.chip.weekPct)}%`:'<span class="nodata">無資料</span>',S.chip&&S.chip.rank84?`84榜第${S.chip.rank84}`:'',`<div class="explain">🔎 週籌碼變化（示範規則・待確認）。</div>${S.chip?`<div class="row"><span>近8週</span>${spark(S.chip.spark8w)}</div>`:''}`,true));
+  box.appendChild(mk('大戶持股(集保)',S.chip&&S.chip.weekPct!=null?`${S.chip.weekPct>0?'+':''}${fmt(S.chip.weekPct)} pp`:(S.chip&&S.chip.big!=null?`${fmt(S.chip.big,1)}%`:'<span class="nodata">無資料</span>'),S.chip&&S.chip.big!=null?`大戶佔 ${fmt(S.chip.big,1)}%`:'',S.chip?`<div class="row"><span>資料週</span><span>${esc(S.chip.asOf||'')}</span></div><div class="explain">🔎 集保 ≥400張大戶持股比率的『週』變化(百分點)。增＝大戶進、減＝大戶出。</div><div class="row"><span>近8週大戶%</span>${spark(S.chip.spark8w)}</div>`:''));
   box.appendChild(mk('本益比',S.estPE.value!=null?fmt(S.estPE.value,1):'<span class="nodata">無資料</span>',S.estPE.real?'官方當日':(S.estPE.value!=null?`落點 ${esc(S.estPE.layer||'')}`:esc(S.estPE.reason||'')),`<div class="explain">🔎 ${S.estPE.real?'TWSE/TPEx 當日本益比。':(S.estPE.value==null?'獲利太薄或資料不足時不硬估。':'本平台自有估值模型。')}</div>`+(S.estPE.value!=null?`<div class="row"><span></span><span class="lk" onclick="Router.go('valuation',{code:'${d.code}'})">看估值河流圖 →</span></div>`:'')));
   box.appendChild(mk('營收成長',S.revenue?`${S.revenue.yoy>0?'+':''}${fmt(S.revenue.yoy,1)}%`:'<span class="nodata">無資料</span>',S.revenue?`${S.revenue.month} 年增`:'',S.revenue?`<div class="row"><span>單月/月增/累計</span><b>${S.revenue.cur}億・${S.revenue.mom>0?'+':''}${fmt(S.revenue.mom,1)}%・累計${S.revenue.cumYoy>0?'+':''}${fmt(S.revenue.cumYoy,1)}%</b></div><div class="row"><span>首次公布</span><span>${S.revenue.firstPub}</span></div>`:''));
   box.appendChild(mk('法人買賣超',S.inst?`${(S.inst.today??S.inst.net5)>0?'+':''}${fmtInt(S.inst.today??S.inst.net5)} 張`:'<span class="nodata">無資料</span>',S.inst?`當日三大法人`:'',S.inst?`<div class="row"><span>外資/投信/自營</span><b>${fmtInt(S.inst.foreign)}/${fmtInt(S.inst.invest)}/${fmtInt(S.inst.dealer)}</b></div><div class="row"><span>資料日</span><span>${esc(S.inst.asOf||d.asOf)}</span></div>${S.inst.spark10?`<div class="row"><span>近10日</span>${spark(S.inst.spark10)}</div>`:''}<div class="explain">🔎 三大法人當日買賣超（TWSE/TPEx）。</div>`:''));
@@ -424,17 +424,17 @@ Views.screen = async ()=>{
 
 /* ================= 籌碼變化雷達 ================= */
 Views.chip = async (q)=>{
-  const c=el('div');c.innerHTML=pageTitle('💥','籌碼變化雷達','週籌碼（大戶/主力，示範）與日法人分開。');
+  const c=el('div');c.innerHTML=pageTitle('💥','大戶籌碼雷達','集保 ≥400張大戶持股比率的『週』變化(pp)。與日法人分開。');
   c.appendChild(searchInline('chip'));
   const d=await API.get('/chip',{code:q.code});
   if(d.detail){const x=d.detail;const card=el('div','card',h2(`${esc(x.name)} ${x.code}`));
-    card.appendChild(el('div','note',`本週籌碼 ${x.chip.weekPct>0?'+':''}${fmt(x.chip.weekPct)}%${x.chip.rank84?`・84榜第${x.chip.rank84}`:''}｜法人近5日 ${x.inst?fmtInt(x.inst.net5):'—'} 張`));
-    card.innerHTML+=`<div class="row"><span>近8週</span>${spark(x.chip.spark8w)}</div>`;
-    const pl=el('div','list');x.peers.forEach(p=>{const it=el('div','item');it.innerHTML=`<div class="r1"><span class="nm lk" data-go="${p.code}">${esc(p.name)}</span><span class="rt mono ${dirClass(p.weekPct)}">${p.weekPct==null?'—':(p.weekPct>0?'+':'')+fmt(p.weekPct,1)+'%'}</span></div>`;pl.appendChild(it);});
-    card.appendChild(el('div','divider-label','同族籌碼'));card.appendChild(pl);c.appendChild(card);}
+    card.appendChild(el('div','note',`大戶週變化 <b class="${dirClass(x.chip.weekPct)}">${x.chip.weekPct==null?'—':(x.chip.weekPct>0?'+':'')+fmt(x.chip.weekPct)+' pp'}</b>・大戶佔比 <b>${fmt(x.chip.big,1)}%</b>（${esc(x.chip.asOf||'')}）｜法人當日 ${x.inst?fmtInt(x.inst.today):'—'} 張`));
+    card.innerHTML+=`<div class="row"><span>近8週大戶%</span>${spark(x.chip.spark8w)}</div>`;
+    const pl=el('div','list');x.peers.forEach(p=>{const it=el('div','item');it.innerHTML=`<div class="r1"><span class="nm lk" data-go="${p.code}">${esc(p.name)}</span><span class="rt mono ${dirClass(p.weekPct)}">${p.weekPct==null?'—':(p.weekPct>0?'+':'')+fmt(p.weekPct,2)+'pp'}</span></div>`;pl.appendChild(it);});
+    card.appendChild(el('div','divider-label','同族大戶週變化'));card.appendChild(pl);c.appendChild(card);}
   const two=el('div','row2');
-  const mkcol=(t,arr,cls)=>{const b=el('div','card',h2(t));arr.forEach(r=>{const it=el('div','item');it.innerHTML=`<div class="r1"><span class="nm lk" data-go="${r.code}">${esc(r.name)}</span><span class="rt mono ${cls}">${r.weekPct>0?'+':''}${fmt(r.weekPct,1)}%</span></div>`;b.appendChild(it);});return b;};
-  two.appendChild(mkcol('📈 週增前十',d.inc,'up'));two.appendChild(mkcol('📉 週減前十',d.dec,'down'));
+  const mkcol=(t,arr,cls)=>{const b=el('div','card',h2(t));arr.forEach(r=>{const it=el('div','item');it.innerHTML=`<div class="r1"><span class="nm lk" data-go="${r.code}">${esc(r.name)}</span><span class="rt mono ${cls}">${r.weekPct>0?'+':''}${fmt(r.weekPct,2)}pp</span></div>${r.big!=null?`<div class="r2">大戶佔比 ${fmt(r.big,1)}%</div>`:''}`;b.appendChild(it);});return b;};
+  two.appendChild(mkcol('📈 大戶週增前十',d.inc,'up'));two.appendChild(mkcol('📉 大戶週減前十',d.dec,'down'));
   c.appendChild(two);c.appendChild(el('div','note',esc(d.note)));
   c.querySelectorAll('[data-go]').forEach(a=>a.onclick=()=>goStock(a.dataset.go));return c;
 };
